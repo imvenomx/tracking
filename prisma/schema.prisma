@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  password  String
+  name      String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  trackings Tracking[]
+}
+
+model Tracking {
+  id             String          @id @default(cuid())
+  trackingNumber String          @unique
+  status         String          @default("processing")
+  carrier        String          @default("DHL")
+  fromCountry    String
+  fromCity       String
+  toCountry      String
+  toCity         String
+  fromDate       DateTime
+  deliveredDate  DateTime?
+  userId         String
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  events         TrackingEvent[]
+
+  @@index([userId])
+}
+
+model TrackingEvent {
+  id          String   @id @default(cuid())
+  trackingId  String
+  tracking    Tracking @relation(fields: [trackingId], references: [id], onDelete: Cascade)
+  status      String
+  description String
+  location    String
+  city        String
+  country     String
+  timestamp   DateTime
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([trackingId])
+}
