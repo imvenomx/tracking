@@ -3,6 +3,8 @@ import prisma from "@/lib/prisma";
 import { generateTrackingEvents } from "@/lib/routeGenerator";
 import { getSession } from "@/lib/auth";
 
+const STATUS_OPTIONS = ["processing", "sent", "shipped", "delivered"] as const;
+
 const CARRIERS = ["DHL", "UPS", "FedEx", "GLS", "OzonExpress", "Aramex"] as const;
 
 function generateTrackingNumber(carrier: string): string {
@@ -176,6 +178,74 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Create tracking error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const session = await getSession();
+    if (!session) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    const { id, status, deliveredDate } = body;
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Tracking ID is required" },
+        { status: 400 }
+      );
+    }
+
+    if (status && !STATUS_OPTIONS.includes(status)) {
+      return NextResponse.json(
+        { error: "Invalid status" },
+        { status: 400 }
+      );
+    }
+
+    // Verify tracking belongs to user
+    const existingTracking = await prisma.tracking.findFirst({
+      where: {
+        id,
+        userId: session.userId,
+      },
+    });
+
+    if (!existingTracking) {
+      return NextResponse.json(
+        { error: "Tracking not found" },
+        { status: 404 }
+      );
+    }
+
+    // Build update data
+    const updateData: { status?: string; deliveredDate?: Date | null } = {};
+    if (status) {
+      updateData.status = status;
+    }
+    if (status === "delivered" && deliveredDate) {
+      updateData.deliveredDate = new Date(deliveredDate);
+    } else if (status === "delivered" && !existingTracking.deliveredDate) {
+      updateData.deliveredDate = new Date();
+    }
+
+    const tracking = await prisma.tracking.update({
+      where: { id },
+      data: updateData,
+    });
+
+    return NextResponse.json({ tracking });
+  } catch (error) {
+    console.error("Update tracking error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

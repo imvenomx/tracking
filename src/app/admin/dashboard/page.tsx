@@ -65,6 +65,12 @@ export default function AdminDashboard() {
   const [submitting, setSubmitting] = useState(false);
   const [userName, setUserName] = useState("");
 
+  // Edit tracking state
+  const [editingTracking, setEditingTracking] = useState<Tracking | null>(null);
+  const [editStatus, setEditStatus] = useState("");
+  const [editError, setEditError] = useState("");
+  const [updating, setUpdating] = useState(false);
+
   useEffect(() => {
     // Check authentication
     const isAuthenticated = localStorage.getItem("isAdminAuthenticated");
@@ -157,6 +163,46 @@ export default function AdminDashboard() {
       setFormError("An error occurred. Please try again.");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleEditClick = (tracking: Tracking) => {
+    setEditingTracking(tracking);
+    setEditStatus(tracking.status);
+    setEditError("");
+  };
+
+  const handleUpdateStatus = async () => {
+    if (!editingTracking) return;
+
+    setEditError("");
+    setUpdating(true);
+
+    try {
+      const response = await fetch("/api/tracking", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: editingTracking.id,
+          status: editStatus,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setEditError(data.error || "Failed to update tracking");
+        return;
+      }
+
+      setEditingTracking(null);
+      fetchTrackings();
+    } catch {
+      setEditError("An error occurred. Please try again.");
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -301,6 +347,99 @@ export default function AdminDashboard() {
               >
                 Close
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Tracking Modal */}
+        {editingTracking && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">
+                    Update Status
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    <code className="bg-gray-100 px-2 py-0.5 rounded">
+                      {editingTracking.trackingNumber}
+                    </code>
+                  </p>
+                </div>
+                <button
+                  onClick={() => setEditingTracking(null)}
+                  className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-gray-100 transition-colors"
+                >
+                  <svg
+                    className="w-5 h-5 text-gray-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Status
+                  </label>
+                  <select
+                    value={editStatus}
+                    onChange={(e) => setEditStatus(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 bg-white"
+                  >
+                    {statusOptions.map((status) => (
+                      <option key={status} value={status}>
+                        {status.charAt(0).toUpperCase() + status.slice(1)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {editError && (
+                  <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm flex items-center gap-2">
+                    <svg
+                      className="w-5 h-5 flex-shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    {editError}
+                  </div>
+                )}
+
+                <div className="flex gap-4 pt-4">
+                  <button
+                    type="button"
+                    onClick={() => setEditingTracking(null)}
+                    className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleUpdateStatus}
+                    disabled={updating || editStatus === editingTracking.status}
+                    className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-medium transition-colors"
+                  >
+                    {updating ? "Updating..." : "Update Status"}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -809,17 +948,25 @@ export default function AdminDashboard() {
                         {formatDate(tracking.fromDate)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <button
-                          onClick={() =>
-                            copyToClipboard(
-                              `${window.location.origin}/track?num=${tracking.trackingNumber}`,
-                              tracking.id
-                            )
-                          }
-                          className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
-                        >
-                          {copiedText === tracking.id ? "Copied!" : "Copy Link"}
-                        </button>
+                        <div className="flex items-center gap-3">
+                          <button
+                            onClick={() => handleEditClick(tracking)}
+                            className="text-orange-600 hover:text-orange-700 text-sm font-medium transition-colors"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() =>
+                              copyToClipboard(
+                                `${window.location.origin}/track?num=${tracking.trackingNumber}`,
+                                tracking.id
+                              )
+                            }
+                            className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+                          >
+                            {copiedText === tracking.id ? "Copied!" : "Copy Link"}
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
