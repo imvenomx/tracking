@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { countries, detectCityFromAddress } from "@/data/locations";
+import { countries, getCitiesByCountry, detectCityFromAddress } from "@/data/locations";
 
 interface Tracking {
   id: string;
@@ -57,7 +57,6 @@ export default function AdminDashboard() {
     status: "processing",
     carrier: "DHL",
     fromCountry: "",
-    fromAddress: "",
     fromCity: "",
     toCountry: "",
     toAddress: "",
@@ -156,7 +155,6 @@ export default function AdminDashboard() {
         status: "processing",
         carrier: "DHL",
         fromCountry: "",
-        fromAddress: "",
         fromCity: "",
         toCountry: "",
         toAddress: "",
@@ -569,11 +567,11 @@ export default function AdminDashboard() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Origin
                   </label>
-                  <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-4">
                     <select
                       value={formData.fromCountry}
                       onChange={(e) =>
-                        setFormData({ ...formData, fromCountry: e.target.value, fromCity: "", fromAddress: "" })
+                        setFormData({ ...formData, fromCountry: e.target.value, fromCity: "" })
                       }
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 bg-white"
@@ -585,44 +583,22 @@ export default function AdminDashboard() {
                         </option>
                       ))}
                     </select>
-                    <div>
-                      <input
-                        type="text"
-                        value={formData.fromAddress}
-                        onChange={(e) => {
-                          const address = e.target.value;
-                          const detectedCity = detectCityFromAddress(address, formData.fromCountry);
-                          setFormData({
-                            ...formData,
-                            fromAddress: address,
-                            fromCity: detectedCity || ""
-                          });
-                        }}
-                        placeholder="Enter full address (e.g., 123 Main St, Paris 75001)"
-                        disabled={!formData.fromCountry}
-                        required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 bg-white disabled:bg-gray-100 disabled:text-gray-400 placeholder-gray-400"
-                      />
-                      {formData.fromAddress && (
-                        <div className="mt-2 flex items-center gap-2">
-                          {formData.fromCity ? (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 text-sm rounded-lg border border-green-200">
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                              </svg>
-                              Detected: {formData.fromCity}
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-yellow-50 text-yellow-700 text-sm rounded-lg border border-yellow-200">
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                              </svg>
-                              City not detected - include a city name
-                            </span>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                    <select
+                      value={formData.fromCity}
+                      onChange={(e) =>
+                        setFormData({ ...formData, fromCity: e.target.value })
+                      }
+                      required
+                      disabled={!formData.fromCountry}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-gray-900 bg-white disabled:bg-gray-100 disabled:text-gray-400"
+                    >
+                      <option value="">Select City</option>
+                      {getCitiesByCountry(formData.fromCountry).map((city) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
