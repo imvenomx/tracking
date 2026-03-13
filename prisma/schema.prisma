@@ -26,8 +26,10 @@ model Tracking {
   carrier        String          @default("DHL")
   fromCountry    String
   fromCity       String
+  fromAddress    String?
   toCountry      String
   toCity         String
+  toAddress      String?
   fromDate       DateTime
   deliveredDate  DateTime?
   userId         String
