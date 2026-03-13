@@ -13,7 +13,7 @@ export const countries: Country[] = [
   {
     name: "Spain",
     code: "ES",
-    cities: ["Madrid", "Barcelona", "Valencia", "Seville", "Zaragoza", "Bilbao", "Malaga", "Murcia", "Palma", "Granada"]
+    cities: ["Madrid", "Barcelona", "Valencia", "Seville", "Zaragoza", "Bilbao", "Malaga", "Murcia", "Palma", "Granada", "Ibiza", "Formentera", "Alicante", "Cordoba", "Marbella", "Tenerife", "Las Palmas"]
   },
   {
     name: "Germany",
