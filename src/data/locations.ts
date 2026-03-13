@@ -8,12 +8,12 @@ export const countries: Country[] = [
   {
     name: "France",
     code: "FR",
-    cities: ["Paris", "Lyon", "Marseille", "Bordeaux", "Toulouse", "Nice", "Nantes", "Strasbourg", "Montpellier", "Lille", "Perpignan", "Rennes"]
+    cities: ["Paris", "Lyon", "Marseille", "Bordeaux", "Toulouse", "Nice", "Nantes", "Strasbourg", "Montpellier", "Lille", "Perpignan", "Rennes", "Cannes", "Saint-Tropez", "Avignon", "Aix-en-Provence", "Dijon", "Grenoble", "Toulon", "Annecy", "Biarritz", "La Rochelle", "Reims", "Rouen", "Caen", "Le Havre", "Metz", "Nancy", "Orleans", "Clermont-Ferrand", "Limoges", "Tours", "Amiens", "Besancon", "Le Mans", "Ajaccio", "Bastia", "Colmar", "Chambery", "Antibes", "Saint-Malo"]
   },
   {
     name: "Spain",
     code: "ES",
-    cities: ["Madrid", "Barcelona", "Valencia", "Seville", "Zaragoza", "Bilbao", "Malaga", "Murcia", "Palma", "Granada", "Ibiza", "Formentera", "Alicante", "Cordoba", "Marbella", "Tenerife", "Las Palmas"]
+    cities: ["Madrid", "Barcelona", "Valencia", "Seville", "Zaragoza", "Bilbao", "Malaga", "Murcia", "Palma", "Granada", "Ibiza", "Formentera", "Alicante", "Cordoba", "Marbella", "Tenerife", "Las Palmas", "Salamanca", "San Sebastian", "Santander", "Pamplona", "Valladolid", "Vigo", "Gijon", "Cadiz", "Almeria", "Tarragona", "Girona", "Lleida", "Segovia", "Toledo", "Cuenca", "Avila", "Burgos", "Leon", "Oviedo", "Logrono", "Vitoria", "Cartagena", "Jerez", "Ronda", "Nerja", "Benidorm", "Torrevieja", "Fuerteventura", "Lanzarote", "Menorca", "Majorca"]
   },
   {
     name: "Germany",
@@ -23,7 +23,7 @@ export const countries: Country[] = [
   {
     name: "Italy",
     code: "IT",
-    cities: ["Rome", "Milan", "Naples", "Turin", "Florence", "Bologna", "Venice", "Genoa", "Palermo", "Verona"]
+    cities: ["Rome", "Milan", "Naples", "Turin", "Florence", "Bologna", "Venice", "Genoa", "Palermo", "Verona", "Pisa", "Siena", "Lucca", "Perugia", "Assisi", "Rimini", "Ravenna", "Parma", "Modena", "Ferrara", "Trieste", "Padua", "Vicenza", "Brescia", "Bergamo", "Como", "Amalfi", "Sorrento", "Positano", "Capri", "Catania", "Syracuse", "Taormina", "Bari", "Lecce", "Cagliari", "Sardinia", "Cinque Terre", "Portofino", "San Remo", "Ancona", "Pescara", "Trento", "Bolzano", "Cortina", "Livorno", "Arezzo", "Orvieto", "Tivoli"]
   },
   {
     name: "United Kingdom",
@@ -53,12 +53,12 @@ export const countries: Country[] = [
   {
     name: "Switzerland",
     code: "CH",
-    cities: ["Zurich", "Geneva", "Bern", "Basel", "Lausanne", "Lucerne"]
+    cities: ["Zurich", "Geneva", "Bern", "Basel", "Lausanne", "Lucerne", "Lugano", "St. Gallen", "Winterthur", "Zermatt", "Interlaken", "Montreux", "Davos", "St. Moritz", "Locarno", "Thun", "Neuchatel", "Fribourg", "Chur", "Sion", "Grindelwald", "Verbier", "Gstaad", "Lauterbrunnen", "Schaffhausen", "Baden", "Aarau", "Bellinzona", "Biel", "Ascona"]
   },
   {
     name: "Portugal",
     code: "PT",
-    cities: ["Lisbon", "Porto", "Faro", "Coimbra", "Braga", "Funchal"]
+    cities: ["Lisbon", "Porto", "Faro", "Coimbra", "Braga", "Funchal", "Sintra", "Cascais", "Estoril", "Evora", "Aveiro", "Guimaraes", "Setubal", "Lagos", "Albufeira", "Portimao", "Tavira", "Madeira", "Ponta Delgada", "Azores", "Viseu", "Leiria", "Tomar", "Obidos", "Nazare", "Batalha", "Fatima", "Viana do Castelo"]
   },
   {
     name: "Czech Republic",
@@ -78,12 +78,12 @@ export const countries: Country[] = [
   {
     name: "Denmark",
     code: "DK",
-    cities: ["Copenhagen", "Aarhus", "Odense", "Aalborg"]
+    cities: ["Copenhagen", "Aarhus", "Odense", "Aalborg", "Esbjerg", "Randers", "Kolding", "Horsens", "Vejle", "Roskilde", "Herning", "Silkeborg", "Frederiksberg", "Helsingor", "Hillerod", "Naestved", "Svendborg", "Holstebro", "Skagen", "Billund", "Ribe", "Fredericia"]
   },
   {
     name: "Sweden",
     code: "SE",
-    cities: ["Stockholm", "Gothenburg", "Malmo", "Uppsala", "Vasteras"]
+    cities: ["Stockholm", "Gothenburg", "Malmo", "Uppsala", "Vasteras", "Orebro", "Linkoping", "Helsingborg", "Jonkoping", "Norrkoping", "Lund", "Umea", "Gavle", "Boras", "Sundsvall", "Eskilstuna", "Karlstad", "Vaxjo", "Halmstad", "Kalmar", "Kristianstad", "Kiruna", "Visby", "Gotland", "Sigtuna", "Ystad", "Trelleborg"]
   },
   {
     name: "Norway",
