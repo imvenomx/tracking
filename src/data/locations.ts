@@ -279,24 +279,15 @@ export const getCitiesByCountry = (countryName: string): string[] => {
 export const detectCityFromAddress = (address: string, countryName: string): string | null => {
   if (!address || !countryName) return null;
 
-  const country = countries.find(c => c.name === countryName);
-  if (!country) return null;
+  // Detect city from text after the slash "/"
+  // Example: "Appt 40, Street 2 25478 / Madrid" -> "Madrid"
+  const slashIndex = address.lastIndexOf('/');
+  if (slashIndex === -1) return null;
 
-  const normalizedAddress = address.toLowerCase();
+  const cityPart = address.substring(slashIndex + 1).trim();
+  if (!cityPart) return null;
 
-  // Sort cities by length (longer first) to match more specific cities first
-  // e.g., "New York" should match before "York"
-  const sortedCities = [...country.cities].sort((a, b) => b.length - a.length);
-
-  for (const city of sortedCities) {
-    const normalizedCity = city.toLowerCase();
-    // Check if the address contains the city name
-    if (normalizedAddress.includes(normalizedCity)) {
-      return city;
-    }
-  }
-
-  return null;
+  return cityPart;
 };
 
 export const getAllCities = (): { city: string; country: string }[] => {
