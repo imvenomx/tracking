@@ -20,6 +20,10 @@ export const metadata: Metadata = {
     "UPS tracking",
     "DHL tracking",
   ],
+  icons: {
+    icon: "/icon.svg",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
